@@ -1,0 +1,26 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="128" height="128" rx="28" fill="#092E20"/>
+
+  <!-- Admin Panel Window -->
+  <rect x="24" y="28" width="80" height="72" rx="10" fill="#0F5132"/>
+
+  <!-- Top Bar -->
+  <rect x="24" y="28" width="80" height="14" rx="10" fill="#146C43"/>
+
+  <!-- Sidebar -->
+  <rect x="30" y="48" width="18" height="42" rx="4" fill="#198754"/>
+
+  <!-- Content Lines -->
+  <rect x="56" y="52" width="36" height="6" rx="3" fill="#D1E7DD"/>
+  <rect x="56" y="64" width="28" height="6" rx="3" fill="#D1E7DD"/>
+  <rect x="56" y="76" width="32" height="6" rx="3" fill="#D1E7DD"/>
+
+  <!-- Django "D" -->
+  <path d="M52 102C64 110 79 106 84 94"
+        stroke="#20C997"
+        stroke-width="6"
+        stroke-linecap="round"/>
+
+  <circle cx="88" cy="90" r="6" fill="#20C997"/>
+</svg>
