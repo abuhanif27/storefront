@@ -8,3 +8,7 @@ from . import models
 @api_view()
 def products_list(request):
     return Response("Ok")
+
+@api_view()
+def product_detail(request, pk):
+    return Response(f"Product with id {pk}")
