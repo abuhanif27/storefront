@@ -9,11 +9,17 @@ from . import serializers
 @api_view()
 def products_list(request):
     products = models.Product.objects.all()
-    serializer = serializers.ProductSerializer(products, many=True)
+    serializer = serializers.ProductSerializer(products, many=True,context={'request': request})
     return Response(serializer.data)
 
 @api_view()
 def product_detail(request, pk):
     product = get_object_or_404(models.Product, pk=pk)
-    serializer = serializers.ProductSerializer(product)
+    serializer = serializers.ProductSerializer(product,context={'request': request})
+    return Response(serializer.data)
+
+@api_view()
+def collection_detail(request,pk):
+    collection = get_object_or_404(models.Collection, pk=pk)
+    serializer = serializers.CollectionSerializer(collection)
     return Response(serializer.data)
