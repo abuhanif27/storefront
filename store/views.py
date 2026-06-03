@@ -19,6 +19,13 @@ def product_detail(request, pk):
     return Response(serializer.data)
 
 @api_view()
+def collection_list(request):
+    collections = models.Collection.objects.all()
+    serializer = serializers.CollectionSerializer(collections, many=True)
+    return Response(serializer.data)
+
+
+@api_view()
 def collection_detail(request,pk):
     collection = get_object_or_404(models.Collection, pk=pk)
     serializer = serializers.CollectionSerializer(collection)
