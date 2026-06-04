@@ -22,3 +22,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def calculate_tax(self, product:models.Product):
         return product.unit_price * Decimal(1.1)
+    
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Review
+        fields = ['id', 'name', 'description', 'date','product']
+        
