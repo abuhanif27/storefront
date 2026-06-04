@@ -2,41 +2,47 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
 from django.db.models import Count
 from . import models
 from . import serializers
 
 # Create your views here.
-
-@api_view(['GET','POST'])
-def products_list(request):
-    if request.method == 'GET':
+class ProductList(APIView):
+    def get(self, request):
         products = models.Product.objects.all()
         serializer = serializers.ProductSerializer(products, many=True,context={'request': request})
         return Response(serializer.data)
-    elif request.method == 'POST':
+
+    def post(self, request):
         serializer = serializers.ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-@api_view(['GET','PATCH','DELETE'])
-def product_detail(request, pk):
-    product = get_object_or_404(models.Product, pk=pk)
-    if request.method == 'GET':
+class ProductDetail(APIView):
+    def get(self, request, pk):
+        product = get_object_or_404(models.Product, pk=pk)
         serializer = serializers.ProductSerializer(product,context={'request': request})
         return Response(serializer.data)
-    elif request.method == 'PATCH':
+
+    def patch(self, request, pk):
+        product = get_object_or_404(models.Product, pk=pk)
         serializer = serializers.ProductSerializer(product, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data,status=status.HTTP_200_OK)
-    elif request.method == 'DELETE':
+
+
+    def delete(self, request, pk):
+        product = get_object_or_404(models.Product, pk=pk)
         if product.orderitem_set.count() > 0:
             return Response({'error': 'Product cannot be deleted because it is associated with an order item.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-        product.delete()
+        self.product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 @api_view(['GET','POST'])
 def collection_list(request):
     if request.method == 'GET':
