@@ -15,8 +15,5 @@ def say_hello(request):
         queryset = cursor.execute("SELECT * FROM store_collection")
         cursor.callproc("get_customers", [1, 2])
         print(queryset)
-        
-        
-        
     
     return render(request, 'hello.html', {'name': 'Mosh'})
