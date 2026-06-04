@@ -96,6 +96,9 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField()
+    
+    class Meta:
+        unique_together = [['cart', 'product']]
 
 
 class Review(models.Model):
