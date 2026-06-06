@@ -56,7 +56,14 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
     
     
 class CartItemViewSet(ModelViewSet):
-    serializer_class = serializers.CartItemSerializer
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return serializers.AddCartItemSerializer
+        else:
+            return serializers.CartItemSerializer
+    
+    def get_serializer_context(self):
+        return {'cart_id': self.kwargs['cart_pk']}
     
     def get_queryset(self):
         return models.CartItem.objects.filter(cart_id=self.kwargs['cart_pk']).select_related('product')
