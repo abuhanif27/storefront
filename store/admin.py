@@ -106,11 +106,11 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
     autocomplete_fields = ['customer']
     list_display = ['id', 'customer_name', 'placed_at', 'payment_status']
-    list_select_related = ['customer']
+    list_select_related = ['customer','customer__user']
     list_per_page = 10
     list_editable = ['payment_status']
 
-    @admin.display(ordering='customer__first_name')
+    @admin.display(ordering='customer__user__first_name')
     def customer_name(self, order):
         url = reverse('admin:store_customer_changelist') + '?' + urlencode({'id': str(order.customer.id)})
-        return format_html('<a href="{}">{}</a>', url, order.customer.first_name + ' ' + order.customer.last_name)
+        return format_html('<a href="{}">{}</a>', url, order.customer.user.first_name + ' ' + order.customer.user.last_name)
