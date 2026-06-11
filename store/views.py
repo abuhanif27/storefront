@@ -2,6 +2,7 @@ from django.db.models import Count
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin,DestroyModelMixin, UpdateModelMixin
 from rest_framework.viewsets import GenericViewSet
@@ -76,3 +77,16 @@ class CustomerViewSet(CreateModelMixin, RetrieveModelMixin,UpdateModelMixin, Gen
     queryset = models.Customer.objects.select_related('user').all()
     serializer_class = serializers.CustomerSerializer
     
+    @action(detail=False,methods=['GET','PUT'])
+    def me(self, request):
+        customer = models.Customer.objects.get_or_create(user_id=request.user.id)[0]
+        if request.method == 'GET':
+            serializer = serializers.CustomerSerializer(customer)
+        elif request.method == 'PUT':
+            serializer = serializers.CustomerSerializer(customer, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+        elif request.method == 'GET':
+            serializer = serializers.CustomerSerializer(customer)
+        return Response(serializer.data)
