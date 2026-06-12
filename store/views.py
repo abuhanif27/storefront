@@ -10,7 +10,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.filters import SearchFilter,OrderingFilter
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 
-from .permissions import IsAdminOrReadOnly
+from .permissions import IsAdminOrReadOnly, ViewHistoryPermission
 from .filters import ProductFilter
 from . import models
 from .paginations import CustomPagination
@@ -97,4 +97,10 @@ class CustomerViewSet(ModelViewSet):
             return Response(serializer.data)
         elif request.method == 'GET':
             serializer = serializers.CustomerSerializer(customer)
+        return Response(serializer.data)
+    
+    @action(detail=True, permission_classes=[ViewHistoryPermission])
+    def history(self, request):
+        orders = models.Order.objects.filter(customer__user_id=request.user.id)
+        serializer = serializers.OrderSerializer(orders, many=True)
         return Response(serializer.data)
