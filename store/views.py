@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from rest_framework.response import Response
 from rest_framework import status
@@ -7,6 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin,DestroyModelMixin, UpdateModelMixin
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.filters import SearchFilter,OrderingFilter
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .filters import ProductFilter
 from . import models
 from .paginations import CustomPagination
@@ -77,9 +79,14 @@ class CustomerViewSet(CreateModelMixin, RetrieveModelMixin,UpdateModelMixin, Gen
     queryset = models.Customer.objects.select_related('user').all()
     serializer_class = serializers.CustomerSerializer
     
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowAny() ]
+        return [IsAuthenticated()]
+    
     @action(detail=False,methods=['GET','PUT'])
     def me(self, request):
-        customer = models.Customer.objects.get_or_create(user_id=request.user.id)[0]
+        customer = get_object_or_404(models.Customer, user_id=request.user.id)
         if request.method == 'GET':
             serializer = serializers.CustomerSerializer(customer)
         elif request.method == 'PUT':
