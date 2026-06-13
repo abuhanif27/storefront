@@ -107,7 +107,14 @@ class CustomerViewSet(ModelViewSet):
 
 class OrderViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class = serializers.OrderSerializer
+    
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return serializers.CreateOrderSerializer
+        return serializers.OrderSerializer
+    
+    def get_serializer_context(self):
+        return {'user_id': self.request.user.id}
     
     def get_queryset(self):
         user = self.request.user
