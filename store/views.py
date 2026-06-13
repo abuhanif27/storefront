@@ -104,3 +104,8 @@ class CustomerViewSet(ModelViewSet):
         orders = models.Order.objects.filter(customer__user_id=request.user.id)
         serializer = serializers.OrderSerializer(orders, many=True)
         return Response(serializer.data)
+
+class OrderViewSet(ModelViewSet):
+    queryset = models.Order.objects.select_related('customer__user').all()
+    serializer_class = serializers.OrderSerializer
+    

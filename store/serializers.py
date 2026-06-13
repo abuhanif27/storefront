@@ -104,3 +104,14 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = models.Customer
         fields = ['id', 'user_id', 'phone', 'birth_date', 'membership']
     
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = SimpleProductSerializer()
+    class Meta:
+        model = models.OrderItem
+        fields = ['id', 'product', 'unit_price', 'quantity']
+    
+class OrderSerializer(serializers.ModelSerializer):
+    orderitem_set = OrderItemSerializer(many=True)
+    class Meta:
+        model = models.Order
+        fields = ['id', 'placed_at', 'payment_status','orderitem_set']
