@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from rest_framework.response import Response
 from rest_framework import status
@@ -87,7 +86,7 @@ class CustomerViewSet(ModelViewSet):
     
     @action(detail=False,methods=['GET','PUT'],permission_classes=[IsAuthenticated])
     def me(self, request):
-        customer = get_object_or_404(models.Customer, user_id=request.user.id)
+        customer  = models.Customer.objects.get(user_id=request.user.id)
         if request.method == 'GET':
             serializer = serializers.CustomerSerializer(customer)
         elif request.method == 'PUT':
@@ -131,5 +130,5 @@ class OrderViewSet(ModelViewSet):
         user = self.request.user
         if user.is_staff:
             return models.Order.objects.all()
-        customer_id = models.Customer.objects.only('id').get_or_create(user_id=user.id)[0].id
+        customer_id = models.Customer.objects.only('id').get(user_id=user.id)
         return models.Order.objects.filter(customer_id=customer_id)
